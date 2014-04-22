@@ -505,6 +505,172 @@
   };
   
   //-------------
+  // FusionTables Layer
+  //-------------
+  App.prototype.addFusionTableLayer = function(options, callback) {
+    var self = this;
+    options = options || {};
+    options.docid = options.docid || null;
+    if (!options.docid) {
+      console.log("addFutionTableLayer : The 'id' field is required.");
+      return;
+    }
+    
+    options.url = ["https://www.google.com/fusiontables/exporttable?",
+                              "query=" + _selectSQL(options) + "&",
+                              "o=kml&g=col2"].join("");
+    
+    console.log("FusionTable\r\n" + options.url);
+    this.addKmlOverlay(options, callback);
+  };
+  
+  
+  
+  
+  function _selectSQL(params) {
+    var table = params.docid,
+        conditions = params.where || null,
+        additionals = params.other_params || null;
+    
+    var tableName, aliasName,
+        buf = "", sql = "SELECT ",
+        column, value, quate, formula, value2,
+        where = "", tmp, keys, cName;
+    
+    if (typeof table == "object") {
+      for (aliasName in table) {
+        if (Type.is(table[aliasName], Object) && "query" in table[aliasName]) {
+          /*
+           * "select" : {
+           *   "u" : {
+           *     "table" : "users",
+           *     "query" : "max(u.id) as maxCnt"
+           *   }
+           * }
+           */
+          buf += (buf == "" ? "" : ",") + table[aliasName].query;
+        } else {
+          //buf += (buf == "" ? "" : ",") + aliasName + ".*";
+        }
+      }
+      sql += buf;
+    } else {
+      sql += " * ";
+    }
+    
+    sql += " FROM " + table + " ";
+    
+    if (conditions) {
+      sql += _where(conditions);
+    }
+    
+    //console.log("   --> add :  " + (Type.is(additionals, Object)));
+    if (typeof additionals == "object") {
+      sql += " ";
+      for (column in additionals) {
+        value = additionals[column];
+        quate = "";
+        if (typeof value == "string" && value.indexOf(" ") == -1) {
+          quate = '"';
+        }
+        sql += column + " " + quate + value + quate + " ";
+      }
+    } else if (typeof additionals == "string") {
+      sql += " " + additionals;
+    }
+    sql = sql.replace(/^\s*/, "");
+    sql = sql.replace(/\s*$/, "");
+    return sql;
+  };
+  
+    /*
+   * @private
+   * Generate conditinal cause.
+   */
+  function _where(conditions) {
+    var sql = "";
+    var quate;
+    var value;
+    var value2;
+    var column;
+    var where = "";
+    var orCondition = [];
+    
+    if (typeof conditions == "object" && Object.keys(conditions).length > 0) {
+      for (column in conditions) {
+        value = conditions[column];
+        //console.log("column:" + column + ", value:" + value);
+        if (where != "") {
+          where += " AND ";
+        }
+        
+        
+        if (typeof value == "object" && value) {
+          
+          if ("value" in value) {
+            quate = (typeof value.value == "string" ? '\"' : "");
+            value2 = value.value;
+            if (value2 === null ||
+                typeof value2 == "string" && value2.toLowerCase() === 'null') {
+              value2 = 'null';
+              quate = '';
+            } else if (value2 === ''){
+              value2 = '\"\"';
+              quate = '';
+            }
+          } else if("column" in value) {
+            quate = "";
+            value2 = value.column;
+          }
+          where += " " + column + " " + value.eval + " " + quate + value2 + quate;
+          /*
+        } else if (Type.is(value, Array) && value) {
+          orCondition = [];
+          value.forEach(function(val) {
+            quate = "";
+            value2 = "";
+            if ("value" in val) {
+              quate = (Type.is(val.value, String) ? '\"' : "");
+              value2 = val.value;
+              if (value2 === null ||
+                Type.is(value2, String) && value2.toLowerCase() === 'null') {
+                value2 = 'null';
+                quate = '';
+              } else if (value2 === ''){
+                value2 = '\"\"';
+                quate = '';
+              }
+            } else if("column" in value) {
+              value2 = value.column;
+            }
+            
+            orCondition.push(" " + column + " " + val.eval + " " + quate + value2 + quate)
+          });
+          where += "(" + orCondition.join(" OR ") + ")";
+          */
+        } else {
+          quate = (typeof value == "string" ? '\"' : '');
+          where += " " + column + " = " + quate + value + quate;
+        }
+        
+      }
+      sql = " WHERE " + where || 1;
+    } else if (typeof conditions == "string") {
+      sql = " WHERE " + conditions;
+    }
+    
+    return sql;
+  };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  //-------------
   // KML Layer
   //-------------
   App.prototype.addKmlOverlay = function(kmlOverlayOptions, callback) {
