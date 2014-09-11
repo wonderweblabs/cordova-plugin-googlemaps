@@ -254,9 +254,14 @@ App.prototype.getMap = function(div, params) {
     params.backgroundColor = HTMLColor2RGBA(params.backgroundColor);
     args.push(params);
   } else {
+    
     var children = div.childNodes;
     params = params || {};
     params.backgroundColor = HTMLColor2RGBA(params.backgroundColor);
+    
+    var style = window.getComputedStyle(div);
+    var positionCSS = style.getPropertyValue('position');
+    params.fixed = positionCSS === "fixed";
     args.push(params);
     
     self.set("div", div);
@@ -596,6 +601,12 @@ App.prototype.setDiv = function(div) {
     }
     self.set("div", null);
   } else {
+    var options = {};
+    var style = window.getComputedStyle(div);
+    var positionCSS = style.getPropertyValue('position');
+    options.fixed = positionCSS === "fixed";
+    args.push(options);
+    
     var children = div.childNodes;
     self.set("div", div);
     args.push(getDivSize(div));
@@ -619,13 +630,17 @@ App.prototype.setDiv = function(div) {
     }
     args.push(elements);
     
+    div.addEventListener("DOMNodeRemoved", _remove_child);
+    div.addEventListener("DOMNodeInserted", _append_child);
+    
     while(div.parentNode) {
       div.style.backgroundColor = 'rgba(0,0,0,0)';
       div = div.parentNode;
     }
     
-    div.addEventListener("DOMNodeRemoved", _remove_child);
-    div.addEventListener("DOMNodeInserted", _append_child);
+    setTimeout(function() {
+      self.refreshLayout();
+    }, 1000);
   }
   cordova.exec(null, self.errorHandler, PLUGIN_NAME, 'setDiv', args);
 };
@@ -1892,11 +1907,17 @@ window.addEventListener("orientationchange", onMapResize);
 document.addEventListener("deviceready", function() {
   var prevSize = null;
   var div, divSize;
-  var sameCnt = 0;
+  var style, position;
   setInterval(function() {
     div = module.exports.Map.get("div");
     if (div) {
+      style = window.getComputedStyle(div),
+      position = style.getPropertyValue('position');
+      if (position === "fixed") {
+        return;
+      }
       divSize = getDivSize(div);
+      
       if (prevSize) {
         if (divSize.left != prevSize.left ||
             divSize.top != prevSize.top ||

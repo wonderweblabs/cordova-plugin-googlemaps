@@ -40,6 +40,7 @@ public class MyPluginLayout extends FrameLayout  {
   private ViewGroup.LayoutParams orgLayoutParams = null;
   private boolean isDebug = false;
   private boolean isClickable = true;
+  public boolean isFixed = false;
   private Map<String, RectF> HTMLNodes = new HashMap<String, RectF>();
   
   @SuppressLint("NewApi")
