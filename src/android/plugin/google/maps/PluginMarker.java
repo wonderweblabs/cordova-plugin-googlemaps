@@ -13,6 +13,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -484,7 +485,10 @@ public class PluginMarker extends MyPlugin {
           int width = sizeInfo.getInt("width", 0);
           int height = sizeInfo.getInt("height", 0);
           if (width > 0 && height > 0) {
+<<<<<<< HEAD
             isResized = true;
+=======
+>>>>>>> appgyver_dev3
             width = (int)Math.round(width * PluginMarker.this.density);
             height = (int)Math.round(height * PluginMarker.this.density);
             image = PluginUtil.resizeBitmap(image, width, height);
