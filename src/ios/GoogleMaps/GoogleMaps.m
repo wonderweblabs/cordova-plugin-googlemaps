@@ -28,6 +28,12 @@
   self.pluginScrollView.debugView.webView = self.webView;
   self.pluginScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
   self.webView.scrollView.delegate = self;
+  
+  #ifndef TARGET_IPHONE_SIMULATOR
+  self.webView.backgroundColor = [UIColor clearColor];
+  self.webView.opaque = NO;
+  #endif
+  
   [self.pluginScrollView setContentSize:CGSizeMake(320, 960) ];
   
   self.root = self.webView.superview;
