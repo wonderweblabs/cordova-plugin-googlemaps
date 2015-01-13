@@ -107,6 +107,7 @@
 
 @end
 
+/*
 #ifdef TARGET_IPHONE_SIMULATOR
 @implementation MainViewController (CDVViewController)
 - (void)webViewDidFinishLoad:(UIWebView*)theWebView
@@ -117,6 +118,7 @@
 }
 @end
 #endif
+*/
 
 @implementation PluginUtil
 + (BOOL)isIOS7_OR_OVER
