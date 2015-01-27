@@ -36,13 +36,13 @@
 // Override the webViewDidFinishLoad
 // http://stackoverflow.com/questions/5272451/overriding-methods-using-categories-in-objective-c#5272612
 //
-/*
-#ifdef TARGET_IPHONE_SIMULATOR
+
+#if TARGET_IPHONE_SIMULATOR
 @interface MainViewController (CDVViewController)
 - (void)webViewDidFinishLoad:(UIWebView*)theWebView;
 @end
 #endif
-*/
+
 
 @interface PluginUtil : NSObject
 + (BOOL)isIOS7_OR_OVER;
