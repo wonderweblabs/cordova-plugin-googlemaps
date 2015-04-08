@@ -79,7 +79,7 @@ public class CordovaWebView extends XWalkView {
 
     /** Activities and other important classes **/
     private CordovaInterface cordova;
-    CordovaWebViewClient viewClient;
+    public CordovaWebViewClient viewClient;
     private CordovaChromeClient chromeClient;
 
     // Flag to track that a loadUrl timeout occurred
@@ -462,6 +462,7 @@ public class CordovaWebView extends XWalkView {
     
     public void onScrollChanged(int l, int t, int oldl, int oldt)
     {
+      Log.d("CordovaWebView", "--->onScrollChanged");
         super.onScrollChanged(l, t, oldl, oldt);
         //We should post a message that the scroll changed
         ScrollEvent myEvent = new ScrollEvent(l, t, oldl, oldt, this);
