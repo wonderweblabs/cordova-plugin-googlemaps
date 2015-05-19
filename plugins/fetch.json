@@ -1,31 +1,11 @@
 {
-    "plugin.google.maps": {
+    "cordova-plugin-whitelist": {
         "source": {
             "type": "git",
-            "url": "https://github.com/wf9a5m75/phonegap-googlemaps-plugin",
+            "url": "https://github.com/apache/cordova-plugin-whitelist",
             "subdir": "."
-        }
-    },
-    "plugin.http.request": {
-        "source": {
-            "type": "registry",
-            "id": "plugin.http.request"
-        }
-    },
-    "com.google.playservices": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/wf9a5m75/google-play-services",
-            "subdir": ".",
-            "ref": "v23"
-        }
-    },
-    "com.googlemaps.ios": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/wf9a5m75/googlemaps-ios-sdk-for-phonegap",
-            "subdir": ".",
-            "ref": "master"
-        }
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
